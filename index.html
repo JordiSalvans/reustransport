@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Horaris Transport Públic Reus</title>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+	<!-- CSS -->
+	<link type="text/css" rel="stylesheet" href="css/estils.css" />
+	<link type="text/css" rel="stylesheet" href="css/material-icons.css" />
+	<link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection"/>
+
+	<!-- Javascript -->
+	<script type="text/javascript" src="js/jquery-2.2.1.min.js"></script>
+	<script type="text/javascript" src="js/angular.min.js"></script>
+	<script type="text/javascript" src="js/materialize.min.js"></script>
+	<script type="text/javascript" src="js/angular-materialize.js"></script>
+	<script type="text/javascript" src="js/app.js"></script>
+	<script type="text/javascript" src="js/controller.js"></script>
+</head>
+<body ng-app="horarisReusApp">
+	<div ng-controller="horarisReusController" >
+		<nav class="barraNav">
+			<div class="nav-wrapper">
+				<div class="brand-logo">
+					<img src="img/logoReusTransport.jpg" />
+					<div>Reus Transport Pùblic</div>
+				</div>
+			</div>
+		</nav>
+		<div class="loader preloader-wrapper big active">
+			<div class="spinner-layer spinner-blue-only">
+				<div class="circle-clipper left">
+					<div class="circle"></div>
+				</div>
+				<div class="gap-patch">
+					<div class="circle"></div>
+				</div>
+				<div class="circle-clipper right">
+					<div class="circle"></div>
+				</div>
+			</div>
+		</div>
+		<div class="container" style="width: 90%; margin-top: 5px;">
+			<div class="row">
+				<div class="input-field col l6 m6 s12">
+					<div class="col l11 m11 s10">
+						<select id="selectOrigen" ng-model="paradaOrigen" ng-disabled="!paradesOrigen" ng-change="carregarParadesDesti()" material-select watch>
+							<option value="" disabled selected>Escolleix la parada d'origen</option>
+							<option ng-selected="{{parada.id == paradaOrigen}}" ng-repeat="parada in paradesOrigen" value="{{parada.id}}">{{parada.nom}}</option>
+						</select>
+						<label>Parada origen:</label>
+					</div>
+					<div class="col l1 m1 s2">
+						<a class="btn-floating modal-trigger" ng-click="tipusSearch = 'origen'; textSearch = '';" href="#modalSearch">
+							<i class="material-icons">search</i>
+						</a>
+					</div>
+				</div>
+				<div class="input-field col l6 m6 s12">
+					<div class="col l11 m11 s10">
+						<select id="selectDesti" ng-model="paradaDesti" ng-disabled="!paradesDesti" ng-change="carregarHorari()" material-select watch>
+							<option value="" disabled selected>Escolleix la parada de destí</option>
+							<option ng-selected="{{parada.id == paradaDesti}}" ng-repeat="parada in paradesDesti" value="{{parada.id}}">{{parada.nom}}</option>
+						</select>
+						<label>Parada destí:</label>
+					</div>
+					<div class="col l1 m1 s2">
+						<a class="btn-floating modal-trigger" ng-click="tipusSearch = 'desti'; textSearch = '';" href="#modalSearch" ng-class="paradesDesti ? '' : 'disabled'">
+							<i class="material-icons">search</i>
+						</a>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col l12 m12 s12">
+					<ul class="collapsible popout" data-collapsible="accordion" watch>
+						<li ng-repeat="linia in horari">
+							<div class="collapsible-header" style="font-weight: bold; font-size: 24px;">
+								<img ng-src="img/linies/{{linia.num}}.png" style="vertical-align: middle; width: 35px;"/> Línia {{linia.num}}
+							</div>
+							<div class="collapsible-body" style="padding: 0px 10px;">
+								<ul class="collapsible" data-collapsible="accordion" watch>
+									<li ng-repeat="dia in linia.dies">
+										<div class="collapsible-header tipusDia">{{dia.nom | capitalize}}</div>
+										<div class="collapsible-body" style="overflow: auto; text-align: center;" >
+											<div class="row" style="margin: 0;">
+												<div class="col l6 m6 s12">
+													<div class="row">
+														<div class="col l12 m12 s12">
+															<div class="titolParada">{{dia.origen.nom}}</div>
+														</div>
+													</div>
+													<div class="row panellOrigen">
+														<div class="col l3 m4 s3" ng-repeat="hora in dia.origen.hores">
+															{{hora}}
+														</div>
+													</div>
+												</div>
+												<div class="col l6 m6 s12">
+													<div class="row">
+														<div class="col l12 m12 s12" >
+															<div class="titolParada">{{dia.desti.nom}}</div>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col l3 m4 s3" ng-repeat="hora in dia.desti.hores">
+															{{hora}}
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div id="modalError" class="modal">
+				<div class="modal-content">
+					<h4>Ho sentim!</h4>
+					<p>Hi ha hagut un problema al recuperar les dades.</p>
+					<p>Siusplau, intenti-ho més tard.</p>
+				</div>
+				<div class="modal-footer">
+					<a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">D'acord</a>
+				</div>
+			</div>
+			<div id="modalSearch" class="modal" style="width: 90%; overflow-y: hidden; height: 80%;">
+    			<div class="modal-content" style="padding: 0;">
+					<div class="row" style="width: 100%; margin: 0;">
+	    				<div class="col l12 m12 s12" style="padding: 0; height: 50px;">
+	    					<h5 style="margin-left: 10px;">Cerca de parades</h5>
+	    				</div>
+			    		<div class="col l12 m12 s12" style="padding: 0; height: 76px;">
+				    		<div class="input-field">
+			     				<i class="material-icons prefix" style="margin: 8px 0 0 8px;">search</i>
+						        <input id="searchInput" type="text" class="validate" ng-model="textSearch" style="width: 96%;" />
+						        <label for="searchInput">Cerca</label>
+						    </div>
+					    </div>
+			    		<div class="col l12 m12 s12"
+			    				style="padding: 0; height: calc(100% - 136px); overflow-y: scroll; position: absolute; top: 136px;">
+			     			<div class="collection" style="margin: 0;">
+			     				<a class="collection-item" ng-repeat="paradaTemp in getParadesBySearch(textSearch)"
+			     					ng-click="selectSearch(paradaTemp.id)">{{paradaTemp.nom}}</a>
+						    </div>
+					    </div>
+					    <div style="clear:both;"></div>
+				    </div>
+	    		</div>
+	  		</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+.barraNav {
+	background-color: #fdca39;
+}
+
+.barraNav .brand-logo {
+	height: 100%;
+	width: 100%;
+}
+
+.barraNav .brand-logo img {
+	float: left;
+	height: 100%;
+}
+
+.barraNav .brand-logo div {
+	float: left;
+	margin-left: 10px;
+	color: #65666a;
+}
+
+.tipusDia {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.titolParada {
+	border-bottom: 1px solid lightgray;
+	width: 70%;
+	margin: auto;
+	font-weight: bold;
+}
+
+.loader {
+	position: absolute !important;
+	top: calc(50% - 32px);
+	left: calc(50% - 32px);
+	z-index: 1000;
+}
+
+@media screen and (min-width: 601px) {
+    .panellOrigen {
+        border-right: 1px solid lightgray;
+    }
+}
